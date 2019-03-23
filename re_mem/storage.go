@@ -13,7 +13,7 @@ type LocalStorage struct {
 // root dir is the directory re_mem will write and read it's objects
 func NewLocalStorage(rootDir string) Storage {
 	// confirm users disired root dir exists
-	if !files.DirExists(rootDir) {
+	if !files.Exists(rootDir) {
 		errors.DirNotExist(rootDir)
 	}
 
