@@ -3,6 +3,7 @@ package data
 import "encoding/json"
 
 type JsonMap map[string]interface{}
+type Record map[string]string
 
 func parseJsonBytesToMap(data []byte) (JsonMap, error) {
 	var dataMap map[string]interface{}

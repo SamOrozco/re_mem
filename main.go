@@ -21,5 +21,9 @@ func main() {
 		Name: "sam",
 		Age:  100,
 	})
+
+	if err != nil {
+		panic(err)
+	}
 	print(key)
 }
