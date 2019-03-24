@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"re-mem/data"
-	"re-mem/files"
-	"re-mem/hash"
-	"re-mem/util"
+	"github.com/SamOrozco/re_mem/data"
+	"github.com/SamOrozco/re_mem/files"
+	"github.com/SamOrozco/re_mem/hash"
+	"github.com/SamOrozco/re_mem/util"
 	"strings"
 )
 
