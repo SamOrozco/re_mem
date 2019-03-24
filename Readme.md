@@ -79,6 +79,7 @@ if err != nil {
 println(doc.String())
 ```  
 
+### Complex Queries
 You can also use the simple Predicate system.
 There are plans to upgrade this a bunch but this is where is stand now
 ```go
