@@ -13,7 +13,7 @@ func (data JsonMap) String() string {
 	return string(byte)
 }
 
-func parseJsonBytesToMap(data []byte) (JsonMap, error) {
+func ParseJsonBytesToMap(data []byte) (JsonMap, error) {
 	var dataMap map[string]interface{}
 	err := json.Unmarshal(data, &dataMap)
 	if err != nil {
@@ -27,5 +27,5 @@ func ParseToJsonMap(obj interface{}) (JsonMap, error) {
 	if err != nil {
 		return nil, err
 	}
-	return parseJsonBytesToMap(jsonBytes)
+	return ParseJsonBytesToMap(jsonBytes)
 }

@@ -22,6 +22,11 @@ func main() {
 		Age:  100,
 	})
 
+	data, err := col.Query("name", "sam")
+	if err != nil {
+		panic(err)
+	}
+	println(data)
 	if err != nil {
 		panic(err)
 	}
