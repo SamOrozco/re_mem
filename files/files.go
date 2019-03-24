@@ -3,6 +3,7 @@ package files
 import (
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 func Exists(location string) bool {
@@ -24,8 +25,16 @@ func FileSep() string {
 	return string(os.PathSeparator)
 }
 
-func WriteData(newFileLocation, data string) error {
+func WriteNewData(newFileLocation, data string) error {
 	return ioutil.WriteFile(newFileLocation, []byte(data), os.ModePerm)
+}
+
+func WriteData(fileLocation, data string) error {
+	if Exists(fileLocation) {
+		return AppendData(fileLocation, data)
+	} else {
+		return ioutil.WriteFile(fileLocation, []byte(data), os.ModePerm)
+	}
 }
 
 func AppendData(newFileLocation, data string) error {
@@ -38,4 +47,16 @@ func AppendData(newFileLocation, data string) error {
 		return err
 	}
 	return nil
+}
+
+func ReadDataFromFile(loc string) ([]byte, error) {
+	return ioutil.ReadFile(loc)
+}
+
+func ReadLinesFromFile(location string) ([]string, error) {
+	data, err := ReadDataFromFile(location)
+	if err != nil {
+		return nil, err
+	}
+	return strings.Split(string(data), "\n"), nil
 }

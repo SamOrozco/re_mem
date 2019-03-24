@@ -1,6 +1,6 @@
 package re_mem
 
-type Document map[string]interface{}
+import "re-mem/data"
 
 type Storage interface {
 	GetCollection(name string) (Collection, error)
@@ -8,9 +8,9 @@ type Storage interface {
 }
 
 type Collection interface {
-	Get(key string) (Document, error)
+	Get(key string) (data.JsonMap, error)
 	Create(doc interface{}) (string, error)
-	Update(key string, doc interface{}) (Document, error)
-	Query(column, value string) ([]Document, error)
+	Update(key string, doc interface{}) (data.JsonMap, error)
+	Query(column, value string) ([]data.JsonMap, error)
 	Remove(key string) error
 }
