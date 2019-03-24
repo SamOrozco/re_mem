@@ -43,7 +43,7 @@ func (col *LocalCollection) Create(document interface{}) (string, error) {
 }
 
 func (col *LocalCollection) Query(column, value string) ([]data.JsonMap, error) {
-	colLocation := col.getColValueLocation(column, value)
+	colLocation := col.getColValueLocation(column, hash.NewHashString(value))
 	keys, err := col.readKeysFromLocation(colLocation)
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (col *LocalCollection) ExecuteQuery(query *query.Query) ([]data.JsonMap, er
 
 // The trick behind the execute statement method is to only deal with the keys of a result until you
 // are ready to query data
-func (col *LocalCollection) ExecuteStatement(stmt *query.Statement) ([]data.JsonMap, error) {
+func (col *LocalCollection) ExecuteStatement(stmt *query.Predicate) ([]data.JsonMap, error) {
 	keys, err := col.queryKeysForStatement(stmt)
 	if err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ func (col *LocalCollection) fetchDocsForKeys(keys []string) ([]data.JsonMap, err
 	return docs, nil
 }
 
-func (col *LocalCollection) queryKeysForStatement(stmt *query.Statement) ([]string, error) {
+func (col *LocalCollection) queryKeysForStatement(stmt *query.Predicate) ([]string, error) {
 	left := stmt.Left
 	right := stmt.Right
 	// no queries return an empty return
