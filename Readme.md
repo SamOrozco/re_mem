@@ -9,6 +9,70 @@ Every operation is reading from or writing to disc.
 Your "re-mem" database is a directory containing a few files and directories.
 Just know that it is more than just one data file. 
 
+
+## Getting started
+
+Start by selecting the directory you would like your database to live in.
+```go
+store := re_mem.NewLocalStorage("/Users/samorozco/first_db")
+```
+
+Next we must initialize a collection of objects that we want to use. 
+ 
+Everything you create, fetch, or delete will be a part of a collection
+
+```go
+// if the collection exists it will return the existing collection
+// else it will create a new collection
+userCollection, err := store.GetCollection("users")
+```
+
+re-mem is a column store so it does not matter the structure of the object you create.
+In fact you can have any number of totally different object structures in one collection
+
+```go
+userKey, err := usersCollection.Create(&User{
+		Name:  "re-mem",
+		Age:   0,
+		Email: "re-mem@gmail.com",
+	})
+println(userKey)
+
+
+companyKey, err := usersCollection.Create(&Company{
+		Phone: "5556667777"
+		Email: "re-mem@gmail.com",
+	})
+println(companykey)
+```
+
+Because re-mem is a column store we can get both of those objects using a single query. 
+
+```go
+	docs, err := usersCollection.Query("email", "re-mem@gmail.com")
+	if err != nil {
+		panic(err)
+	}
+	
+	for _, doc := range docs {
+		println(doc.String())
+	}
+```
+
+
+Or we can fetch an Object by it's unique key returned by the create call
+```go
+doc, err := usersCollection.Get("<Doc_key>")
+if err != nil {
+	panic(err)
+}
+println(doc.String())
+```  
+  
+
+
+
+
 ## Struct Example 
 
 ```go
