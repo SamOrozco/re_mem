@@ -22,8 +22,8 @@ func NewCollection(rootDir string) Collection {
 	return &LocalCollection{rootDir: rootDir}
 }
 
-func (*LocalCollection) Get(key string) (data.JsonMap, error) {
-	panic("implement me")
+func (col *LocalCollection) Get(key string) (data.JsonMap, error) {
+	return files.ReadJsonMapFromFile(col.getRowValueLocation(key))
 }
 
 func (col *LocalCollection) Create(document interface{}) (string, error) {
@@ -66,16 +66,10 @@ func (col *LocalCollection) readDocumentsFromRowKeys(rows []string) ([]data.Json
 	result := make([]data.JsonMap, len(rows))
 	resultIndex := 0
 	for _, rowKey := range rows {
-		contents, err := files.ReadDataFromFile(col.getRowValueLocation(rowKey))
+		jsonMap, err := files.ReadJsonMapFromFile(col.getRowValueLocation(rowKey))
 		if err != nil {
 			return nil, err
 		}
-
-		jsonMap, err := data.ParseJsonBytesToMap(contents)
-		if err != nil {
-			return nil, err
-		}
-
 		// add the row key to the jsonMap
 		jsonMap[id] = rowKey
 		result[resultIndex] = jsonMap

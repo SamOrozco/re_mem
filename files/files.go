@@ -3,6 +3,7 @@ package files
 import (
 	"io/ioutil"
 	"os"
+	"re-mem/data"
 	"strings"
 )
 
@@ -51,6 +52,14 @@ func AppendData(newFileLocation, data string) error {
 
 func ReadDataFromFile(loc string) ([]byte, error) {
 	return ioutil.ReadFile(loc)
+}
+
+func ReadJsonMapFromFile(loc string) (data.JsonMap, error) {
+	dat, err := ioutil.ReadFile(loc)
+	if err != nil {
+		return nil, err
+	}
+	return data.ParseJsonBytesToMap(dat)
 }
 
 func ReadLinesFromFile(location string) ([]string, error) {
