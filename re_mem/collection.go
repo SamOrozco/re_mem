@@ -6,6 +6,7 @@ import (
 	"re-mem/files"
 	"re-mem/hash"
 	"re-mem/util"
+	"strings"
 )
 
 const rowDirName = ".row"
@@ -40,10 +41,6 @@ func (col *LocalCollection) Create(document interface{}) (string, error) {
 	return rowkey, col.insertRowData(rowkey, jsonMap)
 }
 
-func (*LocalCollection) Update(key string, document interface{}) (data.JsonMap, error) {
-	panic("implement me")
-}
-
 func (col *LocalCollection) Query(column, value string) ([]data.JsonMap, error) {
 	// does file for given value exist
 	colLocation := col.getColValueLocation(column, hash.NewHashString(value))
@@ -55,28 +52,63 @@ func (col *LocalCollection) Query(column, value string) ([]data.JsonMap, error) 
 	if err != nil {
 		return nil, err
 	}
-	return col.readDocumentsFromRowKeys(rowKeys)
-}
-
-func (*LocalCollection) Remove(key string) error {
-	panic("implement me")
-}
-
-func (col *LocalCollection) readDocumentsFromRowKeys(rows []string) ([]data.JsonMap, error) {
-	result := make([]data.JsonMap, len(rows))
-	resultIndex := 0
-	for _, rowKey := range rows {
-		jsonMap, err := files.ReadJsonMapFromFile(col.getRowValueLocation(rowKey))
-		if err != nil {
-			return nil, err
-		}
-		// add the row key to the jsonMap
-		jsonMap[id] = rowKey
-		result[resultIndex] = jsonMap
-		resultIndex++
+	docs, keysString, err := col.readDocumentsFromRowKeys(rowKeys)
+	if err != nil {
+		return nil, err
 	}
 
-	return result, nil
+	// we have to write new keys to file incase a record was deleted
+	err = files.WriteNewData(colLocation, keysString)
+	if err != nil {
+		return nil, err
+	}
+
+	return docs, nil
+
+}
+
+func (col *LocalCollection) Remove(key string) error {
+	err := files.DeleteFile(col.getRowValueLocation(key))
+	if err != nil {
+		return err
+	}
+	return col.removeKey(key)
+}
+
+func (col LocalCollection) removeKey(key string) error {
+	keys, err := files.ReadLinesFromFile(col.getKeyFileLocation())
+	if err != nil {
+		return err
+	}
+
+	bldr := strings.Builder{}
+	for _, curKey := range keys {
+		if curKey != key {
+			bldr.WriteString(fmt.Sprintf("%s \n", curKey))
+		}
+	}
+
+	return files.WriteNewData(col.getKeyFileLocation(), bldr.String())
+}
+
+//
+func (col *LocalCollection) readDocumentsFromRowKeys(rows []string) ([]data.JsonMap, string, error) {
+	result := make([]data.JsonMap, 0)
+	keyBldr := strings.Builder{}
+	for _, rowKey := range rows {
+		rowLoc := col.getRowValueLocation(rowKey)
+		jsonMap, err := files.ReadJsonMapFromFile(rowLoc)
+		if err != nil {
+			// THIS WILL CHANGE
+			// if we get an error we assume it is only because the file does not exists
+			// TODO fix this
+			continue
+		}
+		keyBldr.WriteString(fmt.Sprintf("%s \n", rowKey))
+		result = append(result, jsonMap)
+	}
+
+	return result, keyBldr.String(), nil
 }
 
 // this method will iterate every key in the data map
@@ -85,6 +117,8 @@ func (col *LocalCollection) readDocumentsFromRowKeys(rows []string) ([]data.Json
 func (col LocalCollection) createColumnData(data data.JsonMap) (string, error) {
 	recordKey := hash.NewRandomKey()
 
+	// add id to record
+	data[id] = recordKey
 	// we want to range each column and we are going to store only values that
 	// can be asserted as a string
 	// we will then hash the value are store the record key for each column

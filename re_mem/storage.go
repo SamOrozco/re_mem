@@ -1,7 +1,6 @@
 package re_mem
 
 import (
-	"re-mem/errors"
 	"re-mem/files"
 	"re-mem/hash"
 )
@@ -13,8 +12,8 @@ type LocalStorage struct {
 // root dir is the directory re_mem will write and read it's objects
 func NewLocalStorage(rootDir string) Storage {
 	// confirm users disired root dir exists
-	if !files.Exists(rootDir) {
-		errors.DirNotExist(rootDir)
+	if err := files.CreateDirIfNotExists(rootDir); err != nil {
+		panic(err)
 	}
 
 	// at this point we know we have initialized properly
