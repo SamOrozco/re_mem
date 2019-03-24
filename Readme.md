@@ -78,6 +78,30 @@ if err != nil {
 }
 println(doc.String())
 ```  
+
+You can also use the simple Predicate system.
+There are plans to upgrade this a bunch but this is where is stand now
+```go
+// simple and query for records from our user collections
+    store := NewLocalStorage("/Users/samorozco/first_db")
+	usersCollection, err := store.GetCollection("users")
+	if err != nil {
+		panic(err)
+	}
+	stmt := query.Predicate{
+		Left:     query.NewQuery("name", "abe"),
+		Right:    query.NewQuery("age", "77"),
+		Operator: query.And,
+	}
+	
+	// you also user or
+	stmt := query.Predicate{
+    		Left:     query.NewQuery("name", "abe"),
+    		Right:    query.NewQuery("age", "77"),
+    		Operator: query.Or,
+   }
+	
+```
   
 
 
