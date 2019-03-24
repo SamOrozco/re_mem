@@ -5,6 +5,14 @@ import "encoding/json"
 type JsonMap map[string]interface{}
 type Record map[string]string
 
+func (data JsonMap) String() string {
+	byte, err := json.Marshal(&data)
+	if err != nil {
+		panic(err)
+	}
+	return string(byte)
+}
+
 func parseJsonBytesToMap(data []byte) (JsonMap, error) {
 	var dataMap map[string]interface{}
 	err := json.Unmarshal(data, &dataMap)
