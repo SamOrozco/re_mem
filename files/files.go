@@ -1,9 +1,9 @@
 package files
 
 import (
+	"github.com/SamOrozco/re_mem/data"
 	"io/ioutil"
 	"os"
-	"re-mem/data"
 	"strings"
 )
 

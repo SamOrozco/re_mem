@@ -1,4 +1,4 @@
-package re_mem
+package main
 
 import (
 	"re-mem/files"

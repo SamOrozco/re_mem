@@ -1,6 +1,6 @@
-package re_mem
+package main
 
-import "re-mem/data"
+import "github.com/SamOrozco/re_mem/data"
 
 type Storage interface {
 	GetCollection(name string) (Collection, error)

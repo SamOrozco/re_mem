@@ -1,4 +1,4 @@
-package re_mem
+package main
 
 import (
 	"fmt"

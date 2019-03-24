@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"re-mem/re_mem"
 )
 
 type User struct {
@@ -12,7 +11,7 @@ type User struct {
 }
 
 func main() {
-	store := re_mem.NewLocalStorage("/Users/samorozco/first_db")
+	store := NewLocalStorage("/Users/samorozco/first_db")
 	usersCollection, err := store.GetCollection("users")
 	if err != nil {
 		panic(err)

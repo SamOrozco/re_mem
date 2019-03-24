@@ -1,4 +1,4 @@
-module re-mem
+module github.com/SamOrozco/re_mem
 
 go 1.12
 
