@@ -7,11 +7,21 @@ simple Creates, and Fetches
 Every operation is reading from or writing to disc. 
 
 Your "re-mem" database is a directory containing a few files and directories.
-Just know that it is more than just one data file. 
+Just know that it is more than just one data file.
+
+ 
 
 
 ## Getting started
 
+
+### install
+```bash
+go get -u github.com/SamOrozco/re_mem
+```
+
+
+### Usage
 Start by selecting the directory you would like your database to live in.
 ```go
 store := re_mem.NewLocalStorage("/Users/samorozco/first_db")
