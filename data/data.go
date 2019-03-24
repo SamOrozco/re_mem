@@ -1,6 +1,6 @@
 package data
 
-import "encoding/json"
+import json "github.com/json-iterator/go"
 
 type JsonMap map[string]interface{}
 type Record map[string]string

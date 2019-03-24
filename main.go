@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 type User struct {
 	Name  string
 	Age   int
@@ -12,37 +8,9 @@ type User struct {
 
 func main() {
 	store := NewLocalStorage("/Users/samorozco/first_db")
-	usersCollection, err := store.GetCollection("users")
+	objects, err := store.GetCollection("objects")
 	if err != nil {
 		panic(err)
-	}
-
-	names := []string{"abe", "lincoln", "steven", "hawking", "richard"}
-	ages := []int{34, 231, 121, 12, 77}
-	email := []string{"abe@g.com", "l@g.com", "g@g.com", "d@g.com", "t@g.com"}
-
-	// create 5 users
-	for i := 0; i < 5; i++ {
-		user := &User{
-			Name:  names[i],
-			Age:   ages[i],
-			Email: email[i],
-		}
-		recordKey, err := usersCollection.Create(user)
-		if err != nil {
-			panic(err)
-		}
-		println(fmt.Sprintf("record %s", recordKey))
-	}
-
-	// query for abe by email
-	docs, err := usersCollection.Query("email", "abe@g.com")
-	if err != nil {
-		panic(err)
-	}
-
-	for _, doc := range docs {
-		println(doc.String())
 	}
 
 }
