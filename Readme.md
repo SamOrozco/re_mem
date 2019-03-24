@@ -27,7 +27,7 @@ Everything you create, fetch, or delete will be a part of a collection
 userCollection, err := store.GetCollection("users")
 ```
 
-re-mem is a column store so it does not matter the structure of the object you create.
+It does not matter the structure of the object you create.
 In fact you can have any number of totally different object structures in one collection
 
 ```go
@@ -46,7 +46,7 @@ companyKey, err := usersCollection.Create(&Company{
 println(companykey)
 ```
 
-Because re-mem is a column store we can get both of those objects using a single query. 
+We can get both of those objects using a single query. 
 
 ```go
 	docs, err := usersCollection.Query("email", "re-mem@gmail.com")
