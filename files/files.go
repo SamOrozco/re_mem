@@ -67,7 +67,6 @@ func ReadLinesFromFile(location string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	println(string(data))
 	return strings.Split(string(data), "\n"), nil
 }
 

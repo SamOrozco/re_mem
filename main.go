@@ -46,18 +46,4 @@ func main() {
 		println(doc.String())
 	}
 
-	// Get by key
-	doc, err := usersCollection.Get("<some_record_key>")
-	if err != nil {
-		panic(err)
-	}
-	println(doc)
-
-	// remove doc
-
-	err = usersCollection.Remove("<some_record_key>")
-	if err != nil {
-		panic(err)
-	}
-
 }
