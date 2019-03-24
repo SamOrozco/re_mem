@@ -48,6 +48,8 @@ func (col *LocalCollection) Query(column, value string) ([]data.JsonMap, error) 
 	if err != nil {
 		return nil, err
 	}
+
+	// fetch values for keys
 	docs, keysString, err := col.readDocumentsFromRowKeys(keys)
 	if err != nil {
 		return nil, err
@@ -60,6 +62,7 @@ func (col *LocalCollection) Query(column, value string) ([]data.JsonMap, error) 
 	}
 
 	return docs, nil
+
 }
 
 // this method turns around and calls the Query(col, val) method
@@ -70,6 +73,11 @@ func (col *LocalCollection) ExecuteQuery(query *query.Query) ([]data.JsonMap, er
 // The trick behind the execute statement method is to only deal with the keys of a result until you
 // are ready to query data
 func (col *LocalCollection) ExecuteStatement(stmt *query.Statement) ([]data.JsonMap, error) {
+	keys, err := col.queryKeysForStatement(stmt)
+	if err != nil {
+		return nil, err
+	}
+	return col.fetchDocsForKeys(keys)
 }
 
 func (col *LocalCollection) Remove(key string) error {
@@ -78,6 +86,15 @@ func (col *LocalCollection) Remove(key string) error {
 		return err
 	}
 	return col.removeKey(key)
+}
+
+func (col *LocalCollection) fetchDocsForKeys(keys []string) ([]data.JsonMap, error) {
+	// fetch values for keys
+	docs, _, err := col.readDocumentsFromRowKeys(keys)
+	if err != nil {
+		return nil, err
+	}
+	return docs, nil
 }
 
 func (col *LocalCollection) queryKeysForStatement(stmt *query.Statement) ([]string, error) {
