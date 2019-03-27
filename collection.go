@@ -65,8 +65,8 @@ func (col *LocalCollection) Query(column, value string) ([]data.JsonMap, error) 
 
 }
 
-// this method turns around and calls the Query(col, val) method
-func (col *LocalCollection) ExecuteQuery(query *query.Query) ([]data.JsonMap, error) {
+// this method turns around and calls the Q(col, val) method
+func (col *LocalCollection) ExecuteQuery(query *query.Q) ([]data.JsonMap, error) {
 	return col.Query(query.Column, query.ValueHash)
 }
 
@@ -191,7 +191,7 @@ func (col LocalCollection) removeKey(key string) error {
 	return files.WriteNewData(col.getKeyFileLocation(), bldr.String())
 }
 
-func (col LocalCollection) readKeysFromQuery(query *query.Query) ([]string, error) {
+func (col LocalCollection) readKeysFromQuery(query *query.Q) ([]string, error) {
 	if len(query.Column) < 1 {
 		return make([]string, 0), nil
 	}

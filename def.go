@@ -15,6 +15,6 @@ type Collection interface {
 	Create(doc interface{}) (string, error)
 	Remove(key string) error
 	Query(column, value string) ([]data.JsonMap, error)
-	ExecuteQuery(query *query.Query) ([]data.JsonMap, error)
+	ExecuteQuery(query *query.Q) ([]data.JsonMap, error)
 	ExecuteStatement(query *query.Predicate) ([]data.JsonMap, error)
 }
