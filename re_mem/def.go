@@ -2,7 +2,6 @@ package re_mem
 
 import (
 	"github.com/SamOrozco/re_mem/data"
-	"github.com/SamOrozco/re_mem/query"
 )
 
 type Storage interface {
@@ -15,8 +14,8 @@ type Collection interface {
 	Create(doc interface{}) (string, error)
 	Remove(key string) error
 	Query(column, value string) ([]data.JsonMap, error)
-	ExecuteQuery(query *query.SingleQuery) ([]data.JsonMap, error)
-	NewStatement() query.Statement
+	ExecuteQuery(query *SingleQuery) ([]data.JsonMap, error)
+	NewStatement() Statement
 	GetRowKeys(colName, stringValue string) []string
 	GetRowsForKeys(keys []string) []data.JsonMap
 }

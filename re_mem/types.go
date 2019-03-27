@@ -1,4 +1,4 @@
-package query
+package re_mem
 
 type Op string
 

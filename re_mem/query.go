@@ -1,9 +1,7 @@
-package query
+package re_mem
 
 import (
 	"github.com/SamOrozco/re_mem/data"
-	"github.com/SamOrozco/re_mem/hash"
-	"github.com/SamOrozco/re_mem/re_mem"
 )
 
 // the query contract is
@@ -18,9 +16,9 @@ type Query interface {
 
 type SingleQuery struct {
 	Column      string
-	ValueHash   string
+	Value       string
 	CompareType CompareType
-	collection  re_mem.Collection
+	collection  Collection
 }
 
 func (single SingleQuery) Fetch() []data.JsonMap {
@@ -29,14 +27,14 @@ func (single SingleQuery) Fetch() []data.JsonMap {
 }
 
 func (single SingleQuery) get() []string {
-	return single.collection.GetRowKeys(single.Column, single.ValueHash)
+	return single.collection.GetRowKeys(single.Column, single.Value)
 }
 
 type Clause struct {
 	left       Query
 	right      Query
 	operator   Op
-	collection re_mem.Collection
+	collection Collection
 }
 
 func (cl Clause) get() []string {
@@ -49,13 +47,13 @@ func (cl Clause) Fetch() []data.JsonMap {
 }
 
 type Statement struct {
-	Collection re_mem.Collection
+	Collection Collection
 }
 
 func (stmt Statement) NewQuery(colName, stringValue string) Query {
 	return &SingleQuery{
 		Column:      colName,
-		ValueHash:   hash.NewHashString(stringValue),
+		Value:       stringValue,
 		CompareType: Equal,
 		collection:  stmt.Collection,
 	}
@@ -63,9 +61,10 @@ func (stmt Statement) NewQuery(colName, stringValue string) Query {
 
 func (stmt Statement) NewQueryClause(left, right Query, operator Op) Query {
 	return &Clause{
-		left:     left,
-		right:    right,
-		operator: operator,
+		left:       left,
+		right:      right,
+		operator:   operator,
+		collection: stmt.Collection,
 	}
 }
 

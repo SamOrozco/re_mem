@@ -50,10 +50,16 @@ func TestInitData(t *testing.T) {
 
 func TestComplexQuery(test *testing.T) {
 	store := re_mem.NewLocalStorage("/Users/samorozco/first_db")
-	usersCollection, err := store.GetCollection("users")
+	col, err := store.GetCollection("users")
 	if err != nil {
 		panic(err)
 	}
 
-	docs, err := usersCollectio
+	stmt := col.NewStatement()
+	query := stmt.NewQuery("name", "sam")
+	docs := query.Fetch()
+
+	for _, v := range docs {
+		println(v.String())
+	}
 }

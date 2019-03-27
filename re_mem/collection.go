@@ -5,7 +5,6 @@ import (
 	"github.com/SamOrozco/re_mem/data"
 	"github.com/SamOrozco/re_mem/files"
 	"github.com/SamOrozco/re_mem/hash"
-	"github.com/SamOrozco/re_mem/query"
 	"github.com/SamOrozco/re_mem/util"
 	"strings"
 )
@@ -65,13 +64,13 @@ func (col *LocalCollection) Query(column, value string) ([]data.JsonMap, error) 
 
 }
 
-func (col *LocalCollection) NewStatement() query.Statement {
-	return query.Statement{Collection: col}
+func (col *LocalCollection) NewStatement() Statement {
+	return Statement{Collection: col}
 }
 
 // this method turns around and calls the SingleQuery(col, val) method
-func (col *LocalCollection) ExecuteQuery(query *query.SingleQuery) ([]data.JsonMap, error) {
-	return col.Query(query.Column, query.ValueHash)
+func (col *LocalCollection) ExecuteQuery(query *SingleQuery) ([]data.JsonMap, error) {
+	return col.Query(query.Column, query.Value)
 }
 
 func (col *LocalCollection) Remove(key string) error {
@@ -126,11 +125,11 @@ func (col LocalCollection) removeKey(key string) error {
 	return files.WriteNewData(col.getKeyFileLocation(), bldr.String())
 }
 
-func (col LocalCollection) readKeysFromQuery(query *query.SingleQuery) ([]string, error) {
+func (col LocalCollection) readKeysFromQuery(query *SingleQuery) ([]string, error) {
 	if len(query.Column) < 1 {
 		return make([]string, 0), nil
 	}
-	loc := col.getColValueLocation(query.Column, query.ValueHash)
+	loc := col.getColValueLocation(query.Column, query.Value)
 	return files.ReadLinesFromFile(loc)
 }
 
