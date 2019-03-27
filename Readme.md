@@ -82,27 +82,42 @@ Time of inserts with random data
 100000 inserts -> 6.57s
 100000 inserts -> 7.35s
 
+100000 inserts -> 1 minute 2 seconds
+
+
 ```
 
 ```
 Time for querying a collection of 10,000 records
 Query : (name="abe")
-read 1139 docs
-duration : 72.89515ms
-read 1139 docs
-duration : 60.839699ms
+10,000 docs -> read 1139 docs
+10,000 docs -> duration : 72.89515ms
+10,000 docs -> read 1139 docs
+10,000 docs -> duration : 60.839699ms
+100,000 -> read 11214 docs
+100,000 -> duration : 932.862374ms
+100,000 -> read 11214 docs
+100,000 -> duration : 1.580013132s
 
 Query : (name="hawking" or age=77)
-read 4686 docs
-duration : 208.764212ms
-read 4686 docs
-duration : 221.073691ms
+10,000 docs -> read 4686 docs
+10,000 docs -> duration : 208.764212ms
+10,000 docs -> read 4686 docs
+10,000 docs -> duration : 221.073691ms
+100,000 -> read 46669 docs
+100,000 -> duration : 4.463323699s
+100,000 -> read 46669 docs
+100,000 -> duration : 6.726733346s
 
 Query : (name="hawking" or age=77) and email="abe@g.com")
-read 936 docs
-duration : 42.242082ms
-//read 936 docs
-//duration : 42.355359ms
+10,000 docs -> read 936 docs
+10,000 docs -> duration : 42.242082ms
+10,000 docs -> read 936 docs
+10,000 docs -> duration : 42.355359ms
+100,000 -> read 9337 docs
+100,000 -> duration : 379.915291ms
+100,000 -> read 9337 docs
+100,000 -> duration : 393.000881ms
 
 ```
 

@@ -25,7 +25,7 @@ func TestInsertPerformance(test *testing.T) {
 
 	start := time.Now()
 	// create 5 users
-	for i := 0; i < 10000; i++ {
+	for i := 0; i < 100000; i++ {
 		user := &User{
 			Name:  names[rand.Int()%9],
 			Age:   ages[rand.Int()%5],
@@ -94,3 +94,19 @@ func TestQueryPerformance(test *testing.T) {
 //duration : 221.073691ms
 //read 936 docs
 //duration : 42.355359ms
+
+
+// 100000 docs
+//read 11214 docs
+//duration : 932.862374ms
+//read 46669 docs
+//duration : 4.463323699s
+//read 9337 docs
+//duration : 379.915291ms
+
+//read 11214 docs
+//duration : 1.580013132s
+//read 46669 docs
+//duration : 6.726733346s
+//read 9337 docs
+//duration : 393.000881ms
