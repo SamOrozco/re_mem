@@ -1,4 +1,4 @@
-package query
+package re
 
 type Op string
 

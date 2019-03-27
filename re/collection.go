@@ -1,11 +1,10 @@
-package main
+package re
 
 import (
 	"fmt"
 	"github.com/SamOrozco/re_mem/data"
 	"github.com/SamOrozco/re_mem/files"
 	"github.com/SamOrozco/re_mem/hash"
-	"github.com/SamOrozco/re_mem/query"
 	"github.com/SamOrozco/re_mem/util"
 	"strings"
 )
@@ -65,19 +64,13 @@ func (col *LocalCollection) Query(column, value string) ([]data.JsonMap, error) 
 
 }
 
-// this method turns around and calls the Query(col, val) method
-func (col *LocalCollection) ExecuteQuery(query *query.Query) ([]data.JsonMap, error) {
-	return col.Query(query.Column, query.ValueHash)
+func (col *LocalCollection) NewStatement() Statement {
+	return Statement{Collection: col}
 }
 
-// The trick behind the execute statement method is to only deal with the keys of a result until you
-// are ready to query data
-func (col *LocalCollection) ExecuteStatement(stmt *query.Predicate) ([]data.JsonMap, error) {
-	keys, err := col.queryKeysForStatement(stmt)
-	if err != nil {
-		return nil, err
-	}
-	return col.fetchDocsForKeys(keys)
+// this method turns around and calls the SingleQuery(col, val) method
+func (col *LocalCollection) ExecuteQuery(query *SingleQuery) ([]data.JsonMap, error) {
+	return col.Query(query.Column, query.Value)
 }
 
 func (col *LocalCollection) Remove(key string) error {
@@ -88,6 +81,25 @@ func (col *LocalCollection) Remove(key string) error {
 	return col.removeKey(key)
 }
 
+// this method gets all rows keys with the given column name and string value
+// in this collection
+func (col *LocalCollection) GetRowKeys(columnName, stringValue string) []string {
+	rows, err := col.readKeysFromColVal(columnName, stringValue)
+	if err != nil {
+		panic(err)
+	}
+	return rows
+}
+
+// this method reads all docs from the collection for the given row keys
+func (col *LocalCollection) GetRowsForKeys(keys []string) []data.JsonMap {
+	dat, err := col.fetchDocsForKeys(keys)
+	if err != nil {
+		panic(err)
+	}
+	return dat
+}
+
 func (col *LocalCollection) fetchDocsForKeys(keys []string) ([]data.JsonMap, error) {
 	// fetch values for keys
 	docs, _, err := col.readDocumentsFromRowKeys(keys)
@@ -95,84 +107,6 @@ func (col *LocalCollection) fetchDocsForKeys(keys []string) ([]data.JsonMap, err
 		return nil, err
 	}
 	return docs, nil
-}
-
-func (col *LocalCollection) queryKeysForStatement(stmt *query.Predicate) ([]string, error) {
-	left := stmt.Left
-	right := stmt.Right
-	// no queries return an empty return
-	if right == nil && left == nil {
-		return make([]string, 0), nil
-	}
-	// execute one if the other is nil
-	if right == nil {
-		return col.readKeysFromQuery(left)
-	}
-	if left == nil {
-		return col.readKeysFromQuery(right)
-	}
-
-	leftKeys, err := col.readKeysFromQuery(left)
-	if err != nil {
-		return nil, err
-	}
-
-	rightKeys, err := col.readKeysFromQuery(right)
-
-	return col.mergeKeys(leftKeys, rightKeys, stmt.Operator), nil
-}
-
-func (col *LocalCollection) mergeKeys(left, right []string, operator query.Op) []string {
-	if operator == query.And {
-		// merge
-		var iter []string
-		var mp data.LookupMap
-		rightLen := len(right)
-		leftLen := len(left)
-		if rightLen < leftLen {
-			iter = right
-			mp = data.StringsToLookupMap(left)
-		} else {
-			iter = left
-			mp = data.StringsToLookupMap(right)
-		}
-
-		// iterate list and and check if value to in list and map
-		result := make([]string, 0)
-		for _, val := range iter {
-			_, ok := mp[val]
-			// if val is in map and iter
-			// add to the result
-			if ok {
-				result = append(result, val)
-			}
-		}
-		return result
-	} else {
-		// we need to add unique keys from both sides
-		mp := make(data.LookupMap, 0)
-		for _, leftVal := range left {
-			mp[leftVal] = true
-		}
-
-		for _, rightVal := range right {
-			mp[rightVal] = true
-		}
-
-		// put them into a map to keep them unique
-		mpLen := len(mp)
-		if mpLen < 1 {
-			return make([]string, 0)
-		}
-		// iterator map keys and put into result
-		result := make([]string, mpLen)
-		idx := 0
-		for k := range mp {
-			result[idx] = k
-			idx++
-		}
-		return result
-	}
 }
 
 func (col LocalCollection) removeKey(key string) error {
@@ -191,16 +125,16 @@ func (col LocalCollection) removeKey(key string) error {
 	return files.WriteNewData(col.getKeyFileLocation(), bldr.String())
 }
 
-func (col LocalCollection) readKeysFromQuery(query *query.Query) ([]string, error) {
+func (col LocalCollection) readKeysFromQuery(query *SingleQuery) ([]string, error) {
 	if len(query.Column) < 1 {
 		return make([]string, 0), nil
 	}
-	loc := col.getColValueLocation(query.Column, query.ValueHash)
+	loc := col.getColValueLocation(query.Column, query.Value)
 	return files.ReadLinesFromFile(loc)
 }
 
 func (col LocalCollection) readKeysFromColVal(colName, val string) ([]string, error) {
-	loc := col.getColValueLocation(colName, val)
+	loc := col.getColValueLocation(colName, hash.NewHashString(val))
 	return files.ReadLinesFromFile(loc)
 }
 

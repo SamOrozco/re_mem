@@ -1,4 +1,4 @@
-package main
+package re
 
 import (
 	"github.com/SamOrozco/re_mem/files"
@@ -9,7 +9,7 @@ type LocalStorage struct {
 	rootDir string
 }
 
-// root dir is the directory re_mem will write and read it's objects
+// root dir is the directory re-mem will write and read it's objects
 func NewLocalStorage(rootDir string) Storage {
 	// confirm users disired root dir exists
 	if err := files.CreateDirIfNotExists(rootDir); err != nil {

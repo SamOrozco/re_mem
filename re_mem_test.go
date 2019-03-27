@@ -2,18 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/SamOrozco/re_mem/query"
+	"github.com/SamOrozco/re_mem/re"
 	"testing"
 )
 
-type User struct {
-	Name  string
-	Age   int
-	Email string
-}
 
 func TestInitData(t *testing.T) {
-	store := NewLocalStorage("/Users/samorozco/first_db")
+	store := re.NewLocalStorage("/Users/samorozco/first_db")
 	usersCollection, err := store.GetCollection("users")
 	if err != nil {
 		panic(err)
@@ -49,23 +44,17 @@ func TestInitData(t *testing.T) {
 }
 
 func TestComplexQuery(test *testing.T) {
-	store := NewLocalStorage("/Users/samorozco/first_db")
-	usersCollection, err := store.GetCollection("users")
-	if err != nil {
-		panic(err)
-	}
-	stmt := query.Predicate{
-		Left:     query.NewQuery("name", "abe"),
-		Right:    query.NewQuery("age", "77"),
-		Operator: query.Or,
-	}
-
-	docs, err := usersCollection.ExecuteStatement(&stmt)
+	store := re.NewLocalStorage("/Users/samorozco/first_db")
+	col, err := store.GetCollection("users")
 	if err != nil {
 		panic(err)
 	}
 
-	for _, val := range docs {
-		println(val.String())
+	stmt := col.NewStatement()
+	query := stmt.NewQuery("name", "sam")
+	docs := query.Fetch()
+
+	for _, v := range docs {
+		println(v.String())
 	}
 }
