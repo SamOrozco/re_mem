@@ -2,18 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/SamOrozco/re_mem/re_mem"
+	"github.com/SamOrozco/re_mem/re"
 	"testing"
 )
 
-type User struct {
-	Name  string
-	Age   int
-	Email string
-}
 
 func TestInitData(t *testing.T) {
-	store := re_mem.NewLocalStorage("/Users/samorozco/first_db")
+	store := re.NewLocalStorage("/Users/samorozco/first_db")
 	usersCollection, err := store.GetCollection("users")
 	if err != nil {
 		panic(err)
@@ -49,7 +44,7 @@ func TestInitData(t *testing.T) {
 }
 
 func TestComplexQuery(test *testing.T) {
-	store := re_mem.NewLocalStorage("/Users/samorozco/first_db")
+	store := re.NewLocalStorage("/Users/samorozco/first_db")
 	col, err := store.GetCollection("users")
 	if err != nil {
 		panic(err)

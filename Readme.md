@@ -88,7 +88,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/SamOrozco/re_mem/re_mem"
+	"github.com/SamOrozco/re_mem/re"
 )
 
 type User struct {
@@ -106,7 +106,7 @@ func main() {
 }
 
 func queryStatement() {
-	store := re_mem.NewLocalStorage(storeLocation)
+	store := re.NewLocalStorage(storeLocation)
 	usersCollection, err := store.GetCollection(collectionName)
 	if err != nil {
 		panic(err)
@@ -120,9 +120,9 @@ func queryStatement() {
 	// another simple query
 	nameSteven := stmt.NewQuery("email", "abe@g.com")
 	// combine those two with an and operator
-	both := stmt.NewQueryClause(nameAbe, nameSteven, re_mem.And)
+	both := stmt.NewQueryClause(nameAbe, nameSteven, re.And)
 	// combine that combo with another query and the OR operator
-	combo := stmt.NewQueryClause(both, stmt.NewQuery("name", "steven"), re_mem.Or)
+	combo := stmt.NewQueryClause(both, stmt.NewQuery("name", "steven"), re.Or)
 	// fetch docs for all those queries
 	docs := combo.Fetch()
 	for _, val := range docs {
@@ -132,7 +132,7 @@ func queryStatement() {
 }
 
 func createUsers() {
-	store := re_mem.NewLocalStorage(storeLocation)
+	store := re.NewLocalStorage(storeLocation)
 	usersCollection, err := store.GetCollection(collectionName)
 	if err != nil {
 		panic(err)
@@ -156,6 +156,7 @@ func createUsers() {
 		println(fmt.Sprintf("record %s", recordKey))
 	}
 }
+
 
 	
 ```
