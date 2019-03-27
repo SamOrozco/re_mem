@@ -20,5 +20,3 @@ type Collection interface {
 	GetRowsForKeys(keys []string) []data.JsonMap
 }
 
-type ColStore interface {
-}
