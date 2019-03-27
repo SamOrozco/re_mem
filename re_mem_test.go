@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/SamOrozco/re_mem/query"
+	"github.com/SamOrozco/re_mem/re_mem"
 	"testing"
 )
 
@@ -13,7 +13,7 @@ type User struct {
 }
 
 func TestInitData(t *testing.T) {
-	store := NewLocalStorage("/Users/samorozco/first_db")
+	store := re_mem.NewLocalStorage("/Users/samorozco/first_db")
 	usersCollection, err := store.GetCollection("users")
 	if err != nil {
 		panic(err)
@@ -49,23 +49,11 @@ func TestInitData(t *testing.T) {
 }
 
 func TestComplexQuery(test *testing.T) {
-	store := NewLocalStorage("/Users/samorozco/first_db")
+	store := re_mem.NewLocalStorage("/Users/samorozco/first_db")
 	usersCollection, err := store.GetCollection("users")
 	if err != nil {
 		panic(err)
 	}
-	stmt := query.Predicate{
-		Left:     query.NewQuery("name", "abe"),
-		Right:    query.NewQuery("age", "77"),
-		Operator: query.Or,
-	}
 
-	docs, err := usersCollection.ExecuteStatement(&stmt)
-	if err != nil {
-		panic(err)
-	}
-
-	for _, val := range docs {
-		println(val.String())
-	}
+	docs, err := usersCollectio
 }

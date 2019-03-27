@@ -1,4 +1,4 @@
-package main
+package re_mem
 
 import (
 	"github.com/SamOrozco/re_mem/files"

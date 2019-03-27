@@ -1,4 +1,4 @@
-package main
+package re_mem
 
 import (
 	"github.com/SamOrozco/re_mem/data"
@@ -15,6 +15,11 @@ type Collection interface {
 	Create(doc interface{}) (string, error)
 	Remove(key string) error
 	Query(column, value string) ([]data.JsonMap, error)
-	ExecuteQuery(query *query.Q) ([]data.JsonMap, error)
-	ExecuteStatement(query *query.Predicate) ([]data.JsonMap, error)
+	ExecuteQuery(query *query.SingleQuery) ([]data.JsonMap, error)
+	NewStatement() query.Statement
+	GetRowKeys(colName, stringValue string) []string
+	GetRowsForKeys(keys []string) []data.JsonMap
+}
+
+type ColStore interface {
 }
