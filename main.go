@@ -15,8 +15,8 @@ const storeLocation = "/Users/samorozco/first_db"
 const collectionName = "users"
 
 func main() {
+	createUsers()
 	queryStatement()
-	//createUsers()
 }
 
 func queryStatement() {
