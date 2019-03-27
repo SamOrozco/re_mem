@@ -56,29 +56,6 @@ companyKey, err := usersCollection.Create(&Company{
 println(companykey)
 ```
 
-We can get both of those objects using a single query. 
-
-```go
-	docs, err := usersCollection.Query("email", "re-mem@gmail.com")
-	if err != nil {
-		panic(err)
-	}
-	
-	for _, doc := range docs {
-		println(doc.String())
-	}
-```
-
-
-Or we can fetch an Object by it's unique key returned by the create call
-```go
-doc, err := usersCollection.Get("<Doc_key>")
-if err != nil {
-	panic(err)
-}
-println(doc.String())
-```  
-
 ### Complex Queries
 The addition of the collection statement has added abilities for composing
 different queries together. To form very complex queries that wait to load any data from the disc until they have to. 
