@@ -1,6 +1,7 @@
 package re
 
 import (
+	"fmt"
 	"github.com/SamOrozco/re_mem/data"
 )
 
@@ -12,6 +13,7 @@ import (
 type Query interface {
 	get() []string
 	Fetch() []data.JsonMap
+	Explain() string
 }
 
 type SingleQuery struct {
@@ -19,6 +21,10 @@ type SingleQuery struct {
 	Value       string
 	CompareType CompareType
 	collection  Collection
+}
+
+func (single SingleQuery) Explain() string {
+	return fmt.Sprintf("%s = %s", single.Column, single.Value)
 }
 
 func (single SingleQuery) Fetch() []data.JsonMap {
@@ -35,6 +41,10 @@ type Clause struct {
 	right      Query
 	operator   Op
 	collection Collection
+}
+
+func (cl Clause) Explain() string {
+	return fmt.Sprintf("(%s %s %s)", cl.left.Explain(), cl.operator, cl.right.Explain())
 }
 
 func (cl Clause) get() []string {
