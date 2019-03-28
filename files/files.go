@@ -73,3 +73,7 @@ func ReadLinesFromFile(location string) ([]string, error) {
 func DeleteFile(loc string) error {
 	return os.Remove(loc)
 }
+
+func DeleteDir(loc string) error {
+	return os.RemoveAll(loc)
+}
