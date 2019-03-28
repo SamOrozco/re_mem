@@ -76,6 +76,7 @@ func TestQueryPerformance(test *testing.T) {
 	age77 = stmt.NewQuery("age", "77")
 	nameAndAge = stmt.NewQueryClause(nameHawk, age77, re.Or)
 	andEmailAbe := stmt.NewQueryClause(nameAndAge, stmt.NewQuery("email", "abe@g.com"), re.And)
+	println(andEmailAbe.Explain())
 	docs = andEmailAbe.Fetch()
 	size = len(docs)
 	duration = time.Since(start)
@@ -94,7 +95,6 @@ func TestQueryPerformance(test *testing.T) {
 //duration : 221.073691ms
 //read 936 docs
 //duration : 42.355359ms
-
 
 // 100000 docs
 //read 11214 docs
