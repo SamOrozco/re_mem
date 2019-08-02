@@ -5,7 +5,9 @@ import (
 )
 
 type Storage interface {
+	// returns an existing or initializes a collection with the given name
 	GetCollection(name string) (Collection, error)
+	// removes a collection with the given name
 	RemoveCollection(name string) error
 }
 
