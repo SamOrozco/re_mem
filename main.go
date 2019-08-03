@@ -11,7 +11,7 @@ type User struct {
 	Email string
 }
 
-const storeLocation = "/Users/samorozco/first_db"
+const storeLocation = "C:\\Users\\samue\\test_location"
 const collectionName = "users"
 
 func main() {
