@@ -26,6 +26,14 @@ func FileSep() string {
 	return string(os.PathSeparator)
 }
 
+func WriteLine(fileLocation, data string) error {
+	if Exists(fileLocation) {
+		return AppendData(fileLocation, data+"\n")
+	} else {
+		return ioutil.WriteFile(fileLocation, []byte(data+"\n"), os.ModePerm)
+	}
+}
+
 func WriteNewData(newFileLocation, data string) error {
 	return ioutil.WriteFile(newFileLocation, []byte(data), os.ModePerm)
 }

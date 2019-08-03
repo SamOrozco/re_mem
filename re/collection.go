@@ -13,6 +13,8 @@ const rowDirName = ".row"
 const colDirName = ".col"
 const keyFileName = ".key"
 const id = "_id"
+const indexDirName = ".idx"
+const indexFileName = ".indexes"
 
 type LocalCollection struct {
 	rootDir               string
@@ -21,6 +23,36 @@ type LocalCollection struct {
 
 func NewCollection(rootDir string) Collection {
 	return &LocalCollection{rootDir: rootDir}
+}
+
+// add a column to the indexed column directory
+func (col LocalCollection) IndexColumn(columnName string) error {
+	// lowercase column name
+	columnName = strings.ToLower(columnName)
+	// init index dir if needed
+	if err := col.initIndexIfNeeded(); err != nil {
+		return err
+	}
+
+	// write column to index file so we know that this column indexed
+	if err := col.writeIndexColToFile(columnName); err != nil {
+		return err
+	}
+
+	// add column to index dir for index data to be written to
+	if err := col.addColIndexDir(columnName); err != nil {
+		return err
+	}
+	return nil
+}
+
+// add a directory for this columns index
+func (col LocalCollection) addColIndexDir(columnName string) error {
+	colIndexDir := col.getColIndexDir(columnName)
+	if err := files.CreateDirIfNotExists(colIndexDir); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (col *LocalCollection) Get(key string) (data.JsonMap, error) {
@@ -239,6 +271,13 @@ func (col LocalCollection) initIfNeeded() error {
 	return nil
 }
 
+func (col LocalCollection) initIndexIfNeeded() error {
+	if err := files.CreateDirIfNotExists(col.getIndexDir()); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (col LocalCollection) initCollection() error {
 	// init col dir
 	if err := files.CreateDirIfNotExists(col.getColDir()); err != nil {
@@ -250,6 +289,10 @@ func (col LocalCollection) initCollection() error {
 		return err
 	}
 	return nil
+}
+
+func (col LocalCollection) writeIndexColToFile(columnName string) error {
+	return files.WriteLine(col.getIndexFileLocation(), columnName)
 }
 
 func (col LocalCollection) getColValueLocation(colName, hashedValue string) string {
@@ -274,4 +317,16 @@ func (col LocalCollection) getRowDir() string {
 }
 func (col LocalCollection) getColDir() string {
 	return col.rootDir + files.FileSep() + colDirName
+}
+
+func (col LocalCollection) getIndexDir() string {
+	return col.rootDir + files.FileSep() + colDirName + files.FileSep() + indexDirName
+}
+
+func (col LocalCollection) getColIndexDir(columnName string) string {
+	return col.getIndexDir() + files.FileSep() + columnName
+}
+
+func (col LocalCollection) getIndexFileLocation() string {
+	return col.getIndexDir() + files.FileSep() + indexFileName
 }

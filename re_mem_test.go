@@ -6,6 +6,7 @@ import (
 	"testing"
 )
 
+var testLocation = "C:\\Users\\samue\\re_mem"
 
 func TestInitData(t *testing.T) {
 	store := re.NewLocalStorage("/Users/samorozco/first_db")
@@ -56,5 +57,18 @@ func TestComplexQuery(test *testing.T) {
 
 	for _, v := range docs {
 		println(v.String())
+	}
+}
+
+func TestWriteIndexCol(test *testing.T) {
+	store := re.NewLocalStorage(testLocation)
+	collection, err := store.GetCollection("users")
+	if err != nil {
+		panic(err)
+	}
+
+	err = collection.IndexColumn("name")
+	if err != nil {
+		panic(err)
 	}
 }
