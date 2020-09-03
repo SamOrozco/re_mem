@@ -55,6 +55,7 @@ func ReadDataFromFile(loc string) ([]byte, error) {
 }
 
 func ReadJsonMapFromFile(loc string) (data.JsonMap, error) {
+	loc = strings.TrimSpace(loc)
 	dat, err := ioutil.ReadFile(loc)
 	if err != nil {
 		return nil, err
