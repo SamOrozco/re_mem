@@ -145,7 +145,8 @@ func (col LocalCollection) readKeysFromLocation(loca string) ([]string, error) {
 func (col *LocalCollection) readDocumentsFromRowKeys(rows []string) ([]data.JsonMap, string, error) {
 	result := make([]data.JsonMap, 0)
 	keyBldr := strings.Builder{}
-	for _, rowKey := range rows {
+	rowsLen := len(rows)
+	for i, rowKey := range rows {
 		rowLoc := col.getRowValueLocation(rowKey)
 		jsonMap, err := files.ReadJsonMapFromFile(rowLoc)
 		if err != nil {
@@ -154,8 +155,14 @@ func (col *LocalCollection) readDocumentsFromRowKeys(rows []string) ([]data.Json
 			// TODO fix this
 			continue
 		}
-		keyBldr.WriteString(fmt.Sprintf("%s \n", rowKey))
 		result = append(result, jsonMap)
+
+		// we have to write keys because something might have been deleted
+		if i == rowsLen-1 {
+			keyBldr.WriteString(fmt.Sprintf("%s", strings.TrimSpace(rowKey)))
+		} else {
+			keyBldr.WriteString(fmt.Sprintf("%s \n", strings.TrimSpace(rowKey)))
+		}
 	}
 
 	return result, keyBldr.String(), nil
