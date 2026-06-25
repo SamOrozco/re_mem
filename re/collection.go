@@ -100,6 +100,29 @@ func (col *LocalCollection) GetRowsForKeys(keys []string) []data.JsonMap {
 	return dat
 }
 
+// this method reads every item in the collection by reading all row keys
+// from the keys file and fetching the document for each key
+func (col *LocalCollection) GetAll() ([]data.JsonMap, error) {
+	keys, err := files.ReadLinesFromFile(col.getKeyFileLocation())
+	if err != nil {
+		return nil, err
+	}
+
+	// fetch values for keys
+	docs, keysString, err := col.readDocumentsFromRowKeys(keys)
+	if err != nil {
+		return nil, err
+	}
+
+	// we have to write new keys to file incase a record was deleted
+	err = files.WriteNewData(col.getKeyFileLocation(), keysString)
+	if err != nil {
+		return nil, err
+	}
+
+	return docs, nil
+}
+
 func (col *LocalCollection) fetchDocsForKeys(keys []string) ([]data.JsonMap, error) {
 	// fetch values for keys
 	docs, _, err := col.readDocumentsFromRowKeys(keys)

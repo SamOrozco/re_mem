@@ -28,5 +28,6 @@ type Collection interface {
 	GetRowKeys(colName, stringValue string) []string
 	// gets all rows for the given keys
 	GetRowsForKeys(keys []string) []data.JsonMap
+	// gets all items in the collection
+	GetAll() ([]data.JsonMap, error)
 }
-
